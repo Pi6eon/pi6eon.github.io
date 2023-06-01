@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ลงทุน 3</title>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    เงินทุนตั้งต้น (บาท) : <input id="fund" type="number" value="1000" onchange="tableCreate()" />
+    กำไรตอบแทนต่อครั้งที่ลงทุน (%) : <input id="profit" value="90" type="number" onchange="tableCreate()" />
+    จำนวนครั้งที่ลงทุน : <input id="term" type="number" value="31" onchange="tableCreate()" />
+    ต้นทุนแฝงของการลงทุนต่อครั้ง (บาท) : <input id="hiddencost" value="70" type="number" onchange="tableCreate()" />
+    เงินทุนแบ่งสำรอง : <input id="reserve" type="number" value="3" onchange="tableCreate()" />
+    <div id="root"></div>
+    <script>
+        function getReserveCount(reserve) {
+            let previousValue = 1; // start with 1
+            let previousInt = -1; // start with 1
+            let listReserve = [0, 1];
+            let reserveValue = 1;
+            for (let i = 1; i < reserve - 1; i++) {
+                reserveValue *= 2
+                listReserve.push(reserveValue);
+            }
+            console.log(listReserve);
+            let listResult = [];
+            let sumResult = 1;
+            for (let item of listReserve) {
+                if (0 === item) {
+                    listResult.push(1);
+                } else {
+                    listResult.push(item * 3);
+                    sumResult += item * 3;
+                }
+            }
+            console.log(listResult);
+            console.log(sumResult);
+            const mapResult = new Map();
+            mapResult.set('list', listResult);
+            mapResult.set('sum', sumResult)
+            return mapResult;
+        }
+        function tableCreate() {
+            const fund = document.getElementById('fund').value;
+            const profit = document.getElementById('profit').value;
+            const term = document.getElementById('term').value;
+            const hiddencost = document.getElementById('hiddencost').value;
+            const reserve = document.getElementById('reserve').value;
+            const root = document.getElementById('root');
+            try {
+                const tbl = root.getElementsByTagName('table');
+                for (let t of tbl) {
+                    t.remove();
+                }
+            } catch (e) {
+
+            }
+            const tbl = document.createElement('table');
+            tbl.style.border = '1px solid black';
+            const mapReserve = getReserveCount(reserve);
+            const list = mapReserve.get('list');
+            const sum = mapReserve.get('sum');
+            let previousFund = fund;
+            let previousNet = 0;
+            for (let i = 0; i <= term; i++) {
+                if (0 === i) {
+                    const tr = tbl.insertRow();
+                    const td1 = tr.insertCell();
+                    td1.appendChild(document.createTextNode(`ครั้งที่`));
+                    td1.style.border = '1px solid black';
+                    const td2 = tr.insertCell();
+                    td2.appendChild(document.createTextNode(`ลงทุนไม้ 1`));
+                    td2.style.border = '1px solid black';
+                    const td3 = tr.insertCell();
+                    td3.appendChild(document.createTextNode(`กำไร`));
+                    td3.style.border = '1px solid black';
+                    const td4 = tr.insertCell();
+                    td4.appendChild(document.createTextNode(`เงินสุทธิ`));
+                    td4.style.border = '1px solid black';
+                    for (let j = 1; j <= reserve - 1; j++) {
+                        const td = tr.insertCell();
+                        td.appendChild(document.createTextNode(`ลงทุนไม้ ${j + 1}`));
+                        td.style.border = '1px solid black';
+                    }
+                } else {
+                    const tr = tbl.insertRow();
+                    const td1 = tr.insertCell();
+                    td1.appendChild(document.createTextNode(`${i}`));
+                    td1.style.border = '1px solid black';
+                    const td2 = tr.insertCell();
+                    td2.appendChild(document.createTextNode(`${(Number(previousFund / sum) - hiddencost).toFixed(0)}`));
+                    td2.style.border = '1px solid black';
+                    const td3 = tr.insertCell();
+                    td3.appendChild(document.createTextNode(`${(Number((((previousFund / sum) * profit) / 100)) - hiddencost).toFixed(0)}`));
+                    td3.style.border = '1px solid black';
+                    const td4 = tr.insertCell();
+                    td4.appendChild(document.createTextNode(`${Number(Number(previousFund) + (Number(((previousFund / sum) * profit) / 100) - hiddencost)).toFixed(0)}`));
+                    td4.style.border = '1px solid black';
+                    for (let j = 1; j <= reserve - 1; j++) {
+                        const td = tr.insertCell();
+                        td.appendChild(document.createTextNode(`${(Number((previousFund / sum) * list[j]) - hiddencost).toFixed(0)}`));
+                        td.style.border = '1px solid black';
+                    }
+                    previousFund = Number(Number(previousFund) + (Number(((previousFund * profit) / 100) / sum) - hiddencost)).toFixed(0);
+                }
+            }
+            root.appendChild(tbl);
+        }
+        tableCreate();
+    </script>
+</body>
+
+</html>
