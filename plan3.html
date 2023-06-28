@@ -9,11 +9,11 @@
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    เงินทุนตั้งต้น (บาท) : <input id="fund" type="number" value="1000" onchange="tableCreate()" />
-    กำไรตอบแทนต่อครั้งที่ลงทุน (%) : <input id="profit" value="90" type="number" onchange="tableCreate()" />
+    เงินทุนตั้งต้น (บาท) : <input id="fund" type="number" value="12272" onchange="tableCreate()" /> (1,000=1,534,000)
+    กำไรตอบแทนต่อครั้งที่ลงทุน (%) : <input id="profit" value="50" type="number" onchange="tableCreate()" />
     จำนวนครั้งที่ลงทุน : <input id="term" type="number" value="31" onchange="tableCreate()" />
-    ต้นทุนแฝงของการลงทุนต่อครั้ง (บาท) : <input id="hiddencost" value="70" type="number" onchange="tableCreate()" />
-    เงินทุนแบ่งสำรอง : <input id="reserve" type="number" value="3" onchange="tableCreate()" />
+    ต้นทุนแฝงของการลงทุนต่อครั้ง (บาท) : <input id="hiddencost" value="0" type="number" onchange="tableCreate()" />
+    เงินทุนแบ่งสำรอง : <input id="reserve" type="number" value="10" onchange="tableCreate()" />
     <div id="root"></div>
     <script>
         function getReserveCount(reserve) {
