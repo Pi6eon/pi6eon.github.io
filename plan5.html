@@ -12,7 +12,7 @@
     เงินทุนตั้งต้น (บาท) : <input id="fund" type="number" value="1000" onchange="tableCreate()" />
     กำไรตอบแทนต่อครั้งที่ลงทุน (%) : <input id="profit" value="90" type="number" onchange="tableCreate()" />
     จำนวนครั้งที่ลงทุน : <input id="term" type="number" value="31" onchange="tableCreate()" />
-    ต้นทุนแฝงของการลงทุนต่อครั้ง (บาท) : <input id="hiddencost" value="70" type="number" onchange="tableCreate()" />
+    ต้นทุนแฝงของการลงทุนต่อครั้ง (บาท) : <input id="hiddencost" value="0" type="number" onchange="tableCreate()" />
     เงินทุนแบ่งสำรอง : <input id="reserve" type="number" value="5" onchange="tableCreate()" />
     ขาดทุน : 
     <input type="radio" id="lost2" name="lost" value="2" checked onchange="tableCreate()"/>
@@ -79,7 +79,7 @@
                     td1.appendChild(document.createTextNode(`ครั้งที่`));
                     td1.style.border = '1px solid black';
                     const td2 = tr.insertCell();
-                    td2.appendChild(document.createTextNode(`ลงทุนไม้ 1`));
+                    td2.appendChild(document.createTextNode(`ลงทุนไม้`));
                     td2.style.border = '1px solid black';
                     const td3 = tr.insertCell();
                     td3.appendChild(document.createTextNode(`กำไร`));
@@ -87,11 +87,6 @@
                     const td4 = tr.insertCell();
                     td4.appendChild(document.createTextNode(`เงินสุทธิ`));
                     td4.style.border = '1px solid black';
-                    for (let j = 1; j <= reserve - 1; j++) {
-                        const td = tr.insertCell();
-                        td.appendChild(document.createTextNode(`ลงทุนไม้ ${j + 1}`));
-                        td.style.border = '1px solid black';
-                    }
                 } else {
                     const tr = tbl.insertRow();
                     const td1 = tr.insertCell();
@@ -101,19 +96,13 @@
                     td2.appendChild(document.createTextNode(`${(Number(previousFund / reserve) - hiddencost).toFixed(0)}`));
                     td2.style.border = '1px solid black';
                     const td3 = tr.insertCell();
-                    td3.appendChild(document.createTextNode(`${((i % lost) === 0) ? "-" : ""} ${(Number((((previousFund / reserve) * profit) / 100)) - hiddencost).toFixed(0)}`));
+                    td3.appendChild(document.createTextNode(`${((i % lost) === 0) ? "-" : ""} ${((i % lost) === 0) ? (Number(previousFund / reserve) - hiddencost).toFixed(0) : (Number((((previousFund / reserve) * profit) / 100)) - hiddencost).toFixed(0)}`));
                     td3.style.border = '1px solid black';
                     const td4 = tr.insertCell();
-                    td4.appendChild(document.createTextNode(`${Number(Number(previousFund) + (Number(((previousFund / reserve) * profit) / 100) - hiddencost)).toFixed(0)}`));
+                    td4.appendChild(document.createTextNode(`${((i % lost) === 0) ? Number(Number(previousFund) - (Number(previousFund / reserve) - hiddencost)).toFixed(0) : Number(Number(previousFund) + (Number(((previousFund / reserve) * profit) / 100) - hiddencost)).toFixed(0)}`));
                     td4.style.border = '1px solid black';
-                    for (let j = 1; j <= reserve - 1; j++) {
-                        const td = tr.insertCell();
-                        td.appendChild(document.createTextNode(`${(Number(previousFund / reserve) - hiddencost).toFixed(0)}`));
-                        td.style.border = '1px solid black';
-                    }
-                    if (((i+1) % lost) === 0) {
-                        previousFund = Number(Number(previousFund) + (Number(((previousFund * profit) / 100) / reserve) - hiddencost)).toFixed(0);
-                        previousFund = Number(Number(previousFund) - (Number(((previousFund * profit) / 100) / reserve) - hiddencost)).toFixed(0);
+                    if ((i % lost) === 0) {
+                        previousFund = Number(Number(previousFund) - (Number(previousFund / reserve) - hiddencost)).toFixed(0);
                     } else {
                         previousFund = Number(Number(previousFund) + (Number(((previousFund * profit) / 100) / reserve) - hiddencost)).toFixed(0);
                     }
